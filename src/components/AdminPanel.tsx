@@ -272,38 +272,36 @@ export default function AdminPanel({
       </div>
 
       {/* Main Content */}
-      <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-0' : 'ml-0'} lg:ml-64`}>
+      <div className="lg:pl-64 lg:ml-0">
         {/* Header */}
-        <div className="bg-white shadow-sm border-b sticky top-0 z-30">
-          <div className="px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => setSidebarOpen(true)}
-                  className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
-                >
-                  <Menu className="h-6 w-6" />
-                </button>
-                <h1 className="text-xl font-semibold text-gray-900">
-                  {tabs.find(tab => tab.id === activeTab)?.label}
-                </h1>
-              </div>
-              {hasChanges && (
-                <button
-                  onClick={saveChanges}
-                  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
-                >
-                  <Save className="h-4 w-4" />
-                  <span className="hidden sm:inline">Değişiklikleri Kaydet</span>
-                  <span className="sm:hidden">Kaydet</span>
-                </button>
-              )}
+        <div className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+              >
+                <Menu className="h-6 w-6" />
+              </button>
+              <h1 className="text-xl font-semibold text-gray-900">
+                {tabs.find(tab => tab.id === activeTab)?.label}
+              </h1>
             </div>
+            {hasChanges && (
+              <button
+                onClick={saveChanges}
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
+              >
+                <Save className="h-4 w-4" />
+                <span className="hidden sm:inline">Değişiklikleri Kaydet</span>
+                <span className="sm:hidden">Kaydet</span>
+              </button>
+            )}
           </div>
         </div>
 
         {/* Content */}
-        <div className="px-4 sm:px-6 lg:px-8 py-8 max-w-none">
+        <div className="px-4 py-6">
           {activeTab === 'emails' && (
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
