@@ -16,9 +16,9 @@ import {
   Navigation,
   FileText,
   Palette,
-  Monitor,
-  Upload,
-  Image as ImageIcon
+  LogOut, Mail, Edit3, Save, Users, BarChart3, Menu, X,
+  Download, Trash2, Eye, Plus, Minus, Search, Globe,
+  Navigation, FileText, Palette, Monitor, Upload, Home
 } from 'lucide-react';
 import { EmailSubscriber, SiteContent, SiteVisitor } from '../types';
 
@@ -43,6 +43,7 @@ export default function AdminPanel({
   const [editingContent, setEditingContent] = useState<SiteContent>(content || {});
   const [hasChanges, setHasChanges] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleContentChange = (section: keyof SiteContent, field: string, value: any) => {
     const newContent = { ...editingContent };
@@ -186,67 +187,133 @@ export default function AdminPanel({
     { id: 'notfound', label: '404 Sayfası', icon: FileText }
   ];
 
+  const closeSidebar = () => setSidebarOpen(false);
+
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <h1 className="text-2xl font-bold text-gray-900">Keto Diet Admin Paneli</h1>
-            <div className="flex items-center space-x-4">
-              {hasChanges && (
-                <button
-                  onClick={saveChanges}
-                  className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
-                >
-                  <Save className="h-4 w-4" />
-                  <span>Değişiklikleri Kaydet</span>
-                </button>
-              )}
+    <div className="min-h-screen bg-gray-100 flex">
+      {/* Sidebar Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={closeSidebar}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        {/* Sidebar Header */}
+        <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
+          <h1 className="text-xl font-bold text-gray-900">Admin Panel</h1>
+          <button
+            onClick={closeSidebar}
+            className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 px-4 py-6 space-y-2">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
               <button
-                onClick={onLogout}
-                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+                key={tab.id}
+                onClick={() => {
+                  setActiveTab(tab.id as any);
+                  closeSidebar();
+                }}
+                className={`w-full flex items-center justify-between px-4 py-3 text-left rounded-lg transition-colors ${
+                  isActive 
+                    ? 'bg-green-100 text-green-700 border-r-2 border-green-600' 
+                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                }`}
               >
-                <LogOut className="h-5 w-5" />
-                <span>Çıkış Yap</span>
+                <div className="flex items-center space-x-3">
+                  <Icon className="h-5 w-5" />
+                  <span className="font-medium">{tab.label}</span>
+                </div>
+                {tab.count !== undefined && (
+                  <span className={`px-2 py-1 text-xs rounded-full ${
+                    isActive ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-600'
+                  }`}>
+                    {tab.count}
+                  </span>
+                )}
               </button>
-            </div>
+            );
+          })}
+        </nav>
+
+        {/* Sidebar Footer */}
+        <div className="border-t border-gray-200 p-4 space-y-2">
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-colors"
+          >
+            <Home className="h-5 w-5" />
+            <span>Siteyi Görüntüle</span>
+          </a>
+          <button
+            onClick={onLogout}
+            className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50 hover:text-red-700 rounded-lg transition-colors"
+          >
+            <LogOut className="h-5 w-5" />
+            <span>Çıkış Yap</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Top Bar */}
+        <div className="bg-white shadow-sm border-b lg:hidden">
+          <div className="flex items-center justify-between h-16 px-4">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+            <h1 className="text-lg font-semibold text-gray-900">
+              {tabs.find(tab => tab.id === activeTab)?.label}
+            </h1>
+            {hasChanges && (
+              <button
+                onClick={saveChanges}
+                className="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-1"
+              >
+                <Save className="h-4 w-4" />
+                <span className="hidden sm:inline">Kaydet</span>
+              </button>
+            )}
           </div>
         </div>
       </header>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Tabs */}
-        <div className="mb-8">
-          <nav className="flex space-x-1 overflow-x-auto">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`py-2 px-4 border-b-2 font-medium text-sm whitespace-nowrap ${
-                    activeTab === tab.id
-                      ? 'border-green-500 text-green-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  <div className="flex items-center space-x-2">
-                    <Icon className="h-4 w-4" />
-                    <span>{tab.label}</span>
-                    {tab.count !== undefined && (
-                      <span className="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs">
-                        {tab.count}
-                      </span>
-                    )}
-                  </div>
-                </button>
-              );
-            })}
-          </nav>
+        {/* Desktop Top Bar */}
+        <div className="hidden lg:block bg-white shadow-sm border-b">
+          <div className="flex items-center justify-between h-16 px-6">
+            <h1 className="text-2xl font-bold text-gray-900">
+              {tabs.find(tab => tab.id === activeTab)?.label}
+            </h1>
+            {hasChanges && (
+              <button
+                onClick={saveChanges}
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
+              >
+                <Save className="h-4 w-4" />
+                <span>Değişiklikleri Kaydet</span>
+              </button>
+            )}
         </div>
-
-        {/* Email Subscribers Tab */}
+        {/* Content */}
+        <div className="flex-1 overflow-auto p-6">
         {activeTab === 'emails' && (
           <div className="space-y-6">
             {/* Stats */}
@@ -1480,6 +1547,7 @@ export default function AdminPanel({
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
