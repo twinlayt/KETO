@@ -453,57 +453,57 @@ export default function AdminPanel({
               </div>
 
               {/* Email List */}
-              <div className="bg-white rounded-lg shadow overflow-hidden w-full">
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200">
                 <div className="overflow-x-auto">
                   <table className="w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">
                           <input
                             type="checkbox"
                             checked={selectedEmails.length === emails.length && emails.length > 0}
                             onChange={selectAllEmails}
-                            className="rounded border-gray-300"
+                            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                           />
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kaynak</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarih</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quiz</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kaynak</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarih</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quiz</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {filteredEmails.map((email) => (
-                        <tr key={email.id}>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                        <tr key={email.id} className="hover:bg-gray-50">
+                          <td className="px-4 py-4 whitespace-nowrap">
                             <input
                               type="checkbox"
                               checked={selectedEmails.includes(email.id)}
                               onChange={() => toggleEmailSelection(email.id)}
-                              className="rounded border-gray-300"
+                              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                             />
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{email.email}</td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{email.email}</td>
+                          <td className="px-4 py-4 whitespace-nowrap">
                             <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
                               {getSourceLabel(email.source)}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                             {new Date(email.timestamp).toLocaleDateString('tr-TR')}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                             {email.quizAnswers && email.quizAnswers.length > 0 ? (
                               <span className="text-green-600">✓ Tamamlandı</span>
                             ) : (
                               <span className="text-gray-400">-</span>
                             )}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-4 py-4 whitespace-nowrap text-sm font-medium">
                             <button
                               onClick={() => onDeleteEmail(email.id)}
-                              className="text-red-600 hover:text-red-900 transition-colors"
+                              className="text-red-600 hover:text-red-900 hover:bg-red-50 px-2 py-1 rounded"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
@@ -609,29 +609,31 @@ export default function AdminPanel({
               </div>
 
               {/* Visitors List */}
-              <div className="bg-white rounded-lg shadow overflow-hidden w-full">
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200">
                 <div className="overflow-x-auto">
                   <table className="w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarih</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sayfa</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Referrer</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarayıcı</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarih</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Referrer</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sayfa</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarayıcı</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {filteredVisitors.slice(0, 100).map((visitor) => (
-                        <tr key={visitor.id}>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <tr key={visitor.id} className="hover:bg-gray-50">
+                          <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             {new Date(visitor.timestamp).toLocaleString('tr-TR')}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{visitor.page}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {visitor.referrer === 'Direct' ? 'Direkt' : visitor.referrer}
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                              {visitor.referrer === 'Direct' ? 'Direkt' : visitor.referrer}
+                            </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-xs truncate">
-                            {visitor.userAgent}
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{visitor.page}</td>
+                          <td className="px-4 py-4 text-sm text-gray-500 max-w-xs truncate" title={visitor.userAgent}>
+                            {visitor.userAgent.substring(0, 50)}...
                           </td>
                         </tr>
                       ))}
@@ -856,91 +858,74 @@ export default function AdminPanel({
               <h2 className="text-2xl font-bold mb-6">SMTP Ayarları</h2>
               
               <div className="bg-white rounded-lg shadow p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      SMTP Host
-                    </label>
-                    <input
-                      type="text"
-                      value={smtpSettings.host}
-                      onChange={(e) => setSmtpSettings({...smtpSettings, host: e.target.value})}
-                      placeholder="smtp.gmail.com"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-gray-900">SMTP Sunucu Ayarları</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">SMTP Host</label>
+                        <input 
+                          type="text" 
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" 
+                          placeholder="smtp.gmail.com" 
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Port</label>
+                        <input 
+                          type="number" 
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" 
+                          placeholder="587" 
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Kullanıcı Adı</label>
+                        <input 
+                          type="email" 
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" 
+                          placeholder="your-email@gmail.com" 
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Şifre</label>
+                        <input 
+                          type="password" 
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" 
+                          placeholder="App Password" 
+                        />
+                      </div>
+                    </div>
                   </div>
                   
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Port
-                    </label>
-                    <input
-                      type="text"
-                      value={smtpSettings.port}
-                      onChange={(e) => setSmtpSettings({...smtpSettings, port: e.target.value})}
-                      placeholder="587"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    />
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-gray-900">Gönderen Bilgileri</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Gönderen Email</label>
+                        <input 
+                          type="email" 
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" 
+                          placeholder="noreply@yoursite.com" 
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Gönderen İsim</label>
+                        <input 
+                          type="text" 
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" 
+                          placeholder="KetoMaster" 
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-end">
+                      <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        SMTP Ayarlarını Kaydet
+                      </button>
+                    </div>
                   </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Kullanıcı Adı
-                    </label>
-                    <input
-                      type="text"
-                      value={smtpSettings.username}
-                      onChange={(e) => setSmtpSettings({...smtpSettings, username: e.target.value})}
-                      placeholder="your-email@gmail.com"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Şifre
-                    </label>
-                    <input
-                      type="password"
-                      value={smtpSettings.password}
-                      onChange={(e) => setSmtpSettings({...smtpSettings, password: e.target.value})}
-                      placeholder="••••••••"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Gönderen Email
-                    </label>
-                    <input
-                      type="email"
-                      value={smtpSettings.fromEmail}
-                      onChange={(e) => setSmtpSettings({...smtpSettings, fromEmail: e.target.value})}
-                      placeholder="noreply@yoursite.com"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Gönderen İsim
-                    </label>
-                    <input
-                      type="text"
-                      value={smtpSettings.fromName}
-                      onChange={(e) => setSmtpSettings({...smtpSettings, fromName: e.target.value})}
-                      placeholder="KetoMaster"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    />
-                  </div>
-                </div>
-                
-                <div className="mt-6 flex justify-end">
-                  <button className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2">
-                    <Save className="h-4 w-4" />
-                    <span>SMTP Ayarlarını Kaydet</span>
-                  </button>
                 </div>
                 
                 <div className="mt-6 p-4 bg-blue-50 rounded-lg">
@@ -962,56 +947,56 @@ export default function AdminPanel({
               <h2 className="text-2xl font-bold mb-6">Mail İçeriği Düzenleme</h2>
               
               <div className="bg-white rounded-lg shadow p-6">
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Konusu
-                    </label>
-                    <input
-                      type="text"
-                      value={mailContent.subject}
-                      onChange={(e) => setMailContent({...mailContent, subject: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Email Konusu</label>
+                      <input 
+                        type="text" 
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm" 
+                        placeholder="🎉 Ücretsiz Keto Rehberiniz Hazır!" 
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">HTML İçerik</label>
+                      <textarea 
+                        rows={12} 
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent font-mono text-sm resize-y" 
+                        placeholder="HTML email içeriğinizi buraya yazın..."
+                      ></textarea>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Düz Metin (Fallback)</label>
+                      <textarea 
+                        rows={6} 
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm resize-y" 
+                        placeholder="HTML desteklemeyen email istemcileri için düz metin versiyonu..."
+                      ></textarea>
+                    </div>
                   </div>
                   
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      HTML İçerik
-                    </label>
-                    <textarea
-                      value={mailContent.htmlContent}
-                      onChange={(e) => setMailContent({...mailContent, htmlContent: e.target.value})}
-                      rows={12}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent font-mono text-sm"
-                      placeholder="HTML email içeriğini buraya yazın..."
-                    />
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-gray-900">Email Önizleme</h4>
+                    <div className="border border-gray-300 rounded-lg p-6 bg-gray-50 min-h-[300px]">
+                      <div className="text-sm text-gray-600 mb-4">
+                        <strong>Konu:</strong> 🎉 Ücretsiz Keto Rehberiniz Hazır!
+                      </div>
+                      <div className="bg-white p-6 rounded-lg border shadow-sm">
+                        <p className="text-gray-700">Email önizlemesi burada görünecek...</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex space-x-3">
+                      <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        Değişiklikleri Kaydet
+                      </button>
+                      <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        Test Email Gönder
+                      </button>
+                    </div>
                   </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Düz Metin İçerik
-                    </label>
-                    <textarea
-                      value={mailContent.textContent}
-                      onChange={(e) => setMailContent({...mailContent, textContent: e.target.value})}
-                      rows={6}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      placeholder="Düz metin email içeriğini buraya yazın..."
-                    />
-                  </div>
-                </div>
-                
-                <div className="mt-6 flex justify-between">
-                  <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
-                    <Eye className="h-4 w-4" />
-                    <span>Önizleme</span>
-                  </button>
-                  
-                  <button className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2">
-                    <Save className="h-4 w-4" />
-                    <span>Mail İçeriğini Kaydet</span>
-                  </button>
                 </div>
                 
                 <div className="mt-6 p-4 bg-yellow-50 rounded-lg">
