@@ -1,5 +1,5 @@
--- Keto Landing Page Database Schema
--- MySQL Database Setup
+-- Keto Landing Page MySQL Database Setup
+-- Run this on your MySQL server
 
 CREATE DATABASE IF NOT EXISTS keto_landing 
 CHARACTER SET utf8mb4 
@@ -98,7 +98,7 @@ INSERT IGNORE INTO site_content (section, content) VALUES
     'description', 'Failed at Keto Diet? Get our 30-day guaranteed keto meal list and guides with proven results! 10,000+ people have already transformed their lives.',
     'keywords', 'keto diet, weight loss, meal planning, keto recipes, healthy eating, diet plan, nutrition guide',
     'author', 'KetoMaster',
-    'canonical', 'https://keto-diet-landing-pa-dje0.bolt.host'
+    'canonical', 'https://yourdomain.com'
 )),
 ('popup', JSON_OBJECT(
     'title', 'Leaving already? 🥺',
@@ -131,8 +131,3 @@ INSERT IGNORE INTO site_content (section, content) VALUES
     'text', '#212529',
     'textSecondary', '#6c757d'
 ));
-
--- Create indexes for better performance
-CREATE INDEX IF NOT EXISTS idx_emails_created_at ON emails(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_visitors_created_at ON visitors(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_analytics_timestamp ON analytics(timestamp DESC);

@@ -1,6 +1,6 @@
 # Keto Diet Landing Page
 
-Modern, responsive keto diet landing page built with vanilla HTML/CSS/JavaScript, Bootstrap 5, and MySQL database.
+Modern, responsive keto diet landing page built with vanilla HTML/CSS/JavaScript, Bootstrap 5, and MySQL database. Ready for production deployment on your PHP server.
 
 ## Features
 
@@ -32,40 +32,57 @@ Modern, responsive keto diet landing page built with vanilla HTML/CSS/JavaScript
 ## Setup
 
 ### 1. Database Setup
-```sql
--- Create database
-CREATE DATABASE keto_landing CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Import schema
-mysql -u root -p keto_landing < database/schema.sql
+**MySQL sunucunuzda:**
+```sql
+-- 1. MySQL'e bağlanın
+mysql -u root -p
+
+-- 2. Database'i oluşturun ve import edin
+source database/setup.sql
 ```
 
 ### 2. Configuration
+
+**Sunucunuzda `api/config.php` dosyasını düzenleyin:**
 Edit `api/config.php`:
 ```php
-define('DB_HOST', 'localhost');
+define('DB_HOST', 'localhost');        // MySQL sunucu IP'si
 define('DB_NAME', 'keto_landing');
-define('DB_USER', 'your_username');
-define('DB_PASS', 'your_password');
+define('DB_USER', 'your_username');    // MySQL kullanıcı adınız
+define('DB_PASS', 'your_password');    // MySQL şifreniz
 ```
 
-### 3. Start Server
+### 3. Upload to Server
+
+**Dosyaları sunucunuza yükleyin:**
 ```bash
-npm run dev
-# or
-php -S localhost:8000
+# Tüm dosyaları public_html veya www klasörüne yükleyin
+# - index.html (ana dosya)
+# - css/ klasörü
+# - js/ klasörü  
+# - api/ klasörü
+# - database/ klasörü
+```
+
+### 4. Test Installation
+```
+https://yourdomain.com/          # Ana sayfa
+https://yourdomain.com/api/test  # Database test
 ```
 
 ## Admin Access
 
-- **URL**: `/panel` veya `Ctrl+Shift+A`
+- **URL**: `https://yourdomain.com/panel` veya `Ctrl+Shift+A`
 - **Username**: `admin`
 - **Password**: `admin123`
 
 ## File Structure
 
+**Production ready structure:**
 ```
 ├── index.html              # Ana sayfa
+├── panel.html              # Admin panel sayfası
 ├── css/
 │   └── style.css          # Custom CSS
 ├── js/
@@ -79,17 +96,20 @@ php -S localhost:8000
 │   ├── visitors.php      # Visitor endpoints
 │   ├── content.php       # Content endpoints
 │   └── analytics.php     # Analytics endpoints
-└── database/
-    └── schema.sql        # MySQL schema
+├── database/
+│   └── setup.sql         # MySQL setup script
+└── uploads/              # Resim upload klasörü
 ```
 
 ## API Endpoints
 
-- `GET /api/test` - Database connection test
-- `GET/POST /api/emails` - Email management
-- `GET/POST /api/visitors` - Visitor tracking
-- `GET/POST /api/content` - Content management
-- `GET/POST /api/analytics` - Analytics data
+**Production endpoints:**
+- `GET /api/test` - Database bağlantı testi
+- `GET/POST /api/emails` - Email yönetimi
+- `GET/POST /api/visitors` - Ziyaretçi takibi
+- `GET/POST /api/content` - İçerik yönetimi
+- `GET/POST /api/analytics` - Analytics verisi
+- `POST /api/upload` - Resim yükleme
 
 ## Features
 
@@ -116,11 +136,14 @@ php -S localhost:8000
 
 ## Security
 
-- SQL injection koruması (PDO prepared statements)
-- XSS koruması (input sanitization)
-- CSRF koruması (token tabanlı)
-- Admin authentication
-- Input validation
+**Production security:**
+- ✅ SQL injection koruması (PDO prepared statements)
+- ✅ XSS koruması (input sanitization)
+- ✅ CSRF koruması (token tabanlı)
+- ✅ Admin authentication
+- ✅ Input validation
+- ✅ File upload güvenliği
+- ✅ Rate limiting ready
 
 ## Performance
 
@@ -137,6 +160,32 @@ php -S localhost:8000
 - Safari 14+
 - Edge 90+
 
-## License
+## Deployment Instructions
 
+### 1. Sunucuya Yükleme
+1. Tüm dosyaları FTP/cPanel ile yükleyin
+2. `api/config.php` dosyasında MySQL bilgilerini güncelleyin
+3. `database/setup.sql` dosyasını MySQL'de çalıştırın
+4. `uploads/` klasörüne yazma izni verin (chmod 755)
+
+### 2. Domain Ayarları
+- `api/config.php` içinde domain adresinizi güncelleyin
+- `public/sitemap.xml` içinde URL'leri değiştirin
+- `public/robots.txt` dosyasını kontrol edin
+
+### 3. Test
+- Ana sayfa: `https://yourdomain.com/`
+- Database test: `https://yourdomain.com/api/test`
+- Admin panel: `https://yourdomain.com/panel`
+
+## Production Ready Features
+- 📱 Mobile responsive (Bootstrap 5)
+- 🔒 Secure PHP backend
+- 💾 MySQL database with indexes
+- 📊 Real-time analytics
+- 🎨 Admin customization
+- 📈 SEO optimized
+- 🚀 Fast loading
+
+## License
 MIT License

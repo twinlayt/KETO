@@ -1,9 +1,9 @@
 <?php
 // Database Configuration
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'keto_landing');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_HOST', 'localhost');        // MySQL sunucu adresi
+define('DB_NAME', 'keto_landing');     // Veritabanı adı
+define('DB_USER', 'your_username');    // MySQL kullanıcı adı
+define('DB_PASS', 'your_password');    // MySQL şifresi
 
 // CORS Headers
 header('Access-Control-Allow-Origin: *');
