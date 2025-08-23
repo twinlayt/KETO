@@ -16,9 +16,11 @@ import {
   Navigation,
   FileText,
   Palette,
-  LogOut, Mail, Edit3, Save, Users, BarChart3, Menu, X,
-  Download, Trash2, Eye, Plus, Minus, Search, Globe,
-  Navigation, FileText, Palette, Monitor, Upload, Home
+  Menu, 
+  X,
+  Monitor, 
+  Upload, 
+  Home
 } from 'lucide-react';
 import { EmailSubscriber, SiteContent, SiteVisitor } from '../types';
 
@@ -1347,7 +1349,25 @@ export default function AdminPanel({
                     </label>
                     <div className="flex items-center space-x-3">
                       <input
-  LogOut, Mail, Edit3, Save, Users, BarChart3, Menu, X,
-  Download, Trash2, Eye, Plus, Minus, Search, Globe,
-  Navigation, FileText, Palette, Monitor, Upload, Home
-} from 'lucide-react';
+                        type="color"
+                        value={editingContent.colors.accent}
+                        onChange={(e) => handleContentChange('colors', 'accent', e.target.value)}
+                        className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                      />
+                      <input
+                        type="text"
+                        value={editingContent.colors.accent}
+                        onChange={(e) => handleContentChange('colors', 'accent', e.target.value)}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
