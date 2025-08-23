@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   LogOut, 
   Mail, 
@@ -20,7 +20,8 @@ import {
   X,
   Monitor, 
   Upload, 
-  Home
+  Home,
+  Send
 } from 'lucide-react';
 import { EmailSubscriber, SiteContent, SiteVisitor } from '../types';
 
@@ -41,11 +42,35 @@ export default function AdminPanel({
   onDeleteEmail,
   visitors 
 }: AdminPanelProps) {
-  const [activeTab, setActiveTab] = useState<'emails' | 'visitors' | 'content' | 'seo' | 'navbar' | 'quiz' | 'features' | 'cta' | 'popup' | 'colors' | 'notfound'>('emails');
+  const [activeTab, setActiveTab] = useState<'emails' | 'visitors' | 'content' | 'seo' | 'navbar' | 'quiz' | 'features' | 'cta' | 'popup' | 'colors' | 'notfound' | 'smtp' | 'mail-editor'>('emails');
   const [editingContent, setEditingContent] = useState<SiteContent>(content || {});
   const [hasChanges, setHasChanges] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [smtpSettings, setSmtpSettings] = useState({
+    host: '',
+    port: '587',
+    username: '',
+    password: '',
+    fromEmail: '',
+    fromName: ''
+  });
+  const [mailContent, setMailContent] = useState({
+    subject: 'Keto Diyeti Rehberiniz Hazır!',
+    htmlContent: `
+      <h2>Merhaba!</h2>
+      <p>Keto diyeti rehberiniz hazır. Aşağıdaki linkten indirebilirsiniz:</p>
+      <a href="#" style="background: #16a34a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px;">Rehberi İndir</a>
+      <p>Başarılar dileriz!</p>
+    `,
+    textContent: 'Merhaba! Keto diyeti rehberiniz hazır. Başarılar dileriz!'
+  });
+  const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
+  const [isSending, setIsSending] = useState(false);
+
+  useEffect(() => {
+    setEditingContent(content || {});
+  }, [content]);
 
   const handleContentChange = (section: keyof SiteContent, field: string, value: any) => {
     const newContent = { ...editingContent };
@@ -88,6 +113,36 @@ export default function AdminPanel({
   const saveChanges = () => {
     onContentUpdate(editingContent);
     setHasChanges(false);
+  };
+
+  const handleSendBulkEmail = async () => {
+    if (selectedEmails.length === 0) {
+      alert('Lütfen email göndermek için en az bir kişi seçin.');
+      return;
+    }
+    
+    setIsSending(true);
+    // Simulate sending emails
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    alert(`${selectedEmails.length} kişiye email gönderildi!`);
+    setSelectedEmails([]);
+    setIsSending(false);
+  };
+
+  const toggleEmailSelection = (emailId: string) => {
+    setSelectedEmails(prev => 
+      prev.includes(emailId) 
+        ? prev.filter(id => id !== emailId)
+        : [...prev, emailId]
+    );
+  };
+
+  const selectAllEmails = () => {
+    if (selectedEmails.length === emails.length) {
+      setSelectedEmails([]);
+    } else {
+      setSelectedEmails(emails.map(email => email.id));
+    }
   };
 
   const exportEmails = () => {
@@ -179,6 +234,8 @@ export default function AdminPanel({
     { id: 'emails', label: 'Email Aboneleri', icon: Mail, count: emails.length },
     { id: 'visitors', label: 'Site Ziyaretçileri', icon: Monitor, count: visitors.length },
     { id: 'content', label: 'Ana İçerik', icon: Edit3 },
+    { id: 'smtp', label: 'SMTP Ayarları', icon: Send },
+    { id: 'mail-editor', label: 'Mail Düzenleme', icon: Edit3 },
     { id: 'seo', label: 'SEO Ayarları', icon: Globe },
     { id: 'navbar', label: 'Navbar', icon: Navigation },
     { id: 'quiz', label: 'Quiz Yönetimi', icon: BarChart3 },
@@ -315,13 +372,29 @@ export default function AdminPanel({
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   />
                 </div>
-                <button
-                  onClick={exportEmails}
-                  className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
-                >
-                  <Download className="h-4 w-4" />
-                  <span>CSV İndir</span>
-                </button>
+                <div className="flex space-x-3">
+                  <button
+                    onClick={selectAllEmails}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    {selectedEmails.length === emails.length ? 'Tümünü Kaldır' : 'Tümünü Seç'}
+                  </button>
+                  <button
+                    onClick={handleSendBulkEmail}
+                    disabled={selectedEmails.length === 0 || isSending}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                  >
+                    <Send className="h-4 w-4" />
+                    <span>{isSending ? 'Gönderiliyor...' : `Email Gönder (${selectedEmails.length})`}</span>
+                  </button>
+                  <button
+                    onClick={exportEmails}
+                    className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>CSV İndir</span>
+                  </button>
+                </div>
               </div>
 
               {/* Stats */}
@@ -385,6 +458,14 @@ export default function AdminPanel({
                   <table className="w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <input
+                            type="checkbox"
+                            checked={selectedEmails.length === emails.length && emails.length > 0}
+                            onChange={selectAllEmails}
+                            className="rounded border-gray-300"
+                          />
+                        </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kaynak</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarih</th>
@@ -395,6 +476,14 @@ export default function AdminPanel({
                     <tbody className="bg-white divide-y divide-gray-200">
                       {filteredEmails.map((email) => (
                         <tr key={email.id}>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <input
+                              type="checkbox"
+                              checked={selectedEmails.includes(email.id)}
+                              onChange={() => toggleEmailSelection(email.id)}
+                              className="rounded border-gray-300"
+                            />
+                          </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{email.email}</td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
@@ -756,6 +845,183 @@ export default function AdminPanel({
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* SMTP Settings */}
+          {activeTab === 'smtp' && (
+            <div>
+              <h2 className="text-2xl font-bold mb-6">SMTP Ayarları</h2>
+              
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      SMTP Host
+                    </label>
+                    <input
+                      type="text"
+                      value={smtpSettings.host}
+                      onChange={(e) => setSmtpSettings({...smtpSettings, host: e.target.value})}
+                      placeholder="smtp.gmail.com"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Port
+                    </label>
+                    <input
+                      type="text"
+                      value={smtpSettings.port}
+                      onChange={(e) => setSmtpSettings({...smtpSettings, port: e.target.value})}
+                      placeholder="587"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Kullanıcı Adı
+                    </label>
+                    <input
+                      type="text"
+                      value={smtpSettings.username}
+                      onChange={(e) => setSmtpSettings({...smtpSettings, username: e.target.value})}
+                      placeholder="your-email@gmail.com"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Şifre
+                    </label>
+                    <input
+                      type="password"
+                      value={smtpSettings.password}
+                      onChange={(e) => setSmtpSettings({...smtpSettings, password: e.target.value})}
+                      placeholder="••••••••"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Gönderen Email
+                    </label>
+                    <input
+                      type="email"
+                      value={smtpSettings.fromEmail}
+                      onChange={(e) => setSmtpSettings({...smtpSettings, fromEmail: e.target.value})}
+                      placeholder="noreply@yoursite.com"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Gönderen İsim
+                    </label>
+                    <input
+                      type="text"
+                      value={smtpSettings.fromName}
+                      onChange={(e) => setSmtpSettings({...smtpSettings, fromName: e.target.value})}
+                      placeholder="KetoMaster"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    />
+                  </div>
+                </div>
+                
+                <div className="mt-6 flex justify-end">
+                  <button className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2">
+                    <Save className="h-4 w-4" />
+                    <span>SMTP Ayarlarını Kaydet</span>
+                  </button>
+                </div>
+                
+                <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                  <h4 className="font-medium text-blue-900 mb-2">Gmail SMTP Ayarları:</h4>
+                  <ul className="text-sm text-blue-800 space-y-1">
+                    <li>• Host: smtp.gmail.com</li>
+                    <li>• Port: 587 (TLS) veya 465 (SSL)</li>
+                    <li>• Gmail hesabınızda "Daha az güvenli uygulamalara erişim" açık olmalı</li>
+                    <li>• Veya "Uygulama şifresi" kullanın</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Mail Editor */}
+          {activeTab === 'mail-editor' && (
+            <div>
+              <h2 className="text-2xl font-bold mb-6">Mail İçeriği Düzenleme</h2>
+              
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Email Konusu
+                    </label>
+                    <input
+                      type="text"
+                      value={mailContent.subject}
+                      onChange={(e) => setMailContent({...mailContent, subject: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      HTML İçerik
+                    </label>
+                    <textarea
+                      value={mailContent.htmlContent}
+                      onChange={(e) => setMailContent({...mailContent, htmlContent: e.target.value})}
+                      rows={12}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent font-mono text-sm"
+                      placeholder="HTML email içeriğini buraya yazın..."
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Düz Metin İçerik
+                    </label>
+                    <textarea
+                      value={mailContent.textContent}
+                      onChange={(e) => setMailContent({...mailContent, textContent: e.target.value})}
+                      rows={6}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="Düz metin email içeriğini buraya yazın..."
+                    />
+                  </div>
+                </div>
+                
+                <div className="mt-6 flex justify-between">
+                  <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
+                    <Eye className="h-4 w-4" />
+                    <span>Önizleme</span>
+                  </button>
+                  
+                  <button className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2">
+                    <Save className="h-4 w-4" />
+                    <span>Mail İçeriğini Kaydet</span>
+                  </button>
+                </div>
+                
+                <div className="mt-6 p-4 bg-yellow-50 rounded-lg">
+                  <h4 className="font-medium text-yellow-900 mb-2">HTML Email İpuçları:</h4>
+                  <ul className="text-sm text-yellow-800 space-y-1">
+                    <li>• Inline CSS kullanın (style="...")</li>
+                    <li>• Table-based layout tercih edin</li>
+                    <li>• Resimler için tam URL kullanın</li>
+                    <li>• Alt text ekleyin</li>
+                  </ul>
                 </div>
               </div>
             </div>
