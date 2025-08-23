@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://keto-diet-landing-pa-dje0.bolt.host/sitemap.xml
+
+# Disallow admin panel from search engines
+Disallow: /panel
+
+# Allow all other pages
+Allow: /

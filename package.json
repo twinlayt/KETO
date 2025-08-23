@@ -1,0 +1,13 @@
+{
+  "name": "keto-landing-vanilla",
+  "version": "1.0.0",
+  "description": "Keto Diet Landing Page with Bootstrap 5 and MySQL",
+  "main": "index.html",
+  "scripts": {
+    "dev": "php -S localhost:8000",
+    "start": "php -S localhost:8000"
+  },
+  "keywords": ["keto", "diet", "landing-page", "bootstrap", "mysql"],
+  "author": "KetoMaster",
+  "license": "MIT"
+}
