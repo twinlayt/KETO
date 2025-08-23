@@ -31,51 +31,104 @@ Modern, responsive keto diet landing page built with vanilla HTML/CSS/JavaScript
 
 ## Setup
 
+### 0. Gereksinimler
+- **PHP 7.4+** (Önerilen: PHP 8.0+)
+- **MySQL 5.7+** veya MariaDB 10.2+
+- **Apache** web sunucusu (mod_rewrite aktif)
+- **cPanel** veya SSH erişimi
+
 ### 1. Database Setup
 
-**MySQL sunucunuzda:**
+**cPanel/phpMyAdmin'de:**
 ```sql
--- 1. MySQL'e bağlanın
-mysql -u root -p
-
--- 2. Database'i oluşturun ve import edin
-source database/setup.sql
+-- 1. Yeni database oluşturun: keto_landing
+-- 2. SQL sekmesinde database/setup.sql içeriğini yapıştırın
+-- 3. Çalıştır'a tıklayın
 ```
 
 ### 2. Configuration
 
-**Sunucunuzda `api/config.php` dosyasını düzenleyin:**
-Edit `api/config.php`:
+**ZORUNLU: `api/config.php` dosyasını düzenleyin:**
 ```php
-define('DB_HOST', 'localhost');        // MySQL sunucu IP'si
+define('DB_HOST', 'localhost');           // MySQL host (genellikle localhost)
 define('DB_NAME', 'keto_landing');
-define('DB_USER', 'your_username');    // MySQL kullanıcı adınız
-define('DB_PASS', 'your_password');    // MySQL şifreniz
+define('DB_USER', 'your_mysql_username'); // cPanel MySQL kullanıcı adınız
+define('DB_PASS', 'your_mysql_password'); // cPanel MySQL şifreniz
+define('SITE_URL', 'https://yourdomain.com'); // Kendi domain adresiniz
 ```
 
 ### 3. Upload to Server
 
-**Dosyaları sunucunuza yükleyin:**
+**cPanel File Manager veya FTP ile:**
 ```bash
-# Tüm dosyaları public_html veya www klasörüne yükleyin
-# - index.html (ana dosya)
-# - css/ klasörü
-# - js/ klasörü  
-# - api/ klasörü
-# - database/ klasörü
+# Tüm dosyaları public_html/ klasörüne yükleyin:
+├── index.html
+├── panel.html
+├── install.html
+├── .htaccess
+├── css/
+├── js/
+├── api/
+├── database/
+└── uploads/ (chmod 755)
 ```
 
-### 4. Test Installation
+### 4. PHP Sürüm Ayarı
+
+**cPanel'de:**
+1. **PHP Selector** veya **MultiPHP Manager** bölümüne gidin
+2. Domain için **PHP 8.0** veya **PHP 8.1** seçin
+3. **Extensions** bölümünde şunları aktif edin:
+   - pdo
+   - pdo_mysql
+   - json
+   - mbstring
+   - curl
+
+### 5. Test Installation
 ```
-https://yourdomain.com/          # Ana sayfa
-https://yourdomain.com/api/test  # Database test
+https://yourdomain.com/install.html  # Kurulum rehberi
+https://yourdomain.com/             # Ana sayfa
+https://yourdomain.com/api/test     # Database test
+https://yourdomain.com/panel.html   # Admin panel
 ```
 
 ## Admin Access
 
-- **URL**: `https://yourdomain.com/panel` veya `Ctrl+Shift+A`
+- **URL**: `https://yourdomain.com/panel.html`
 - **Username**: `admin`
 - **Password**: `admin123`
+
+## Troubleshooting
+
+### PHP Sürüm Hatası
+```
+PHP 7.4 or higher is required
+```
+**Çözüm:** cPanel'de PHP sürümünü 8.0+ yapın
+
+### Database Bağlantı Hatası
+```
+Database connection failed
+```
+**Çözüm:** 
+1. `api/config.php` dosyasındaki MySQL bilgilerini kontrol edin
+2. MySQL kullanıcısının database'e erişim yetkisi olduğundan emin olun
+3. `database/setup.sql` dosyasının doğru import edildiğini kontrol edin
+
+### 404 Hatası
+```
+Page not found
+```
+**Çözüm:** 
+1. `.htaccess` dosyasının yüklendiğinden emin olun
+2. Apache'de mod_rewrite'ın aktif olduğunu kontrol edin
+
+### Resim Upload Hatası
+```
+Failed to save uploaded file
+```
+**Çözüm:** `uploads/` klasörüne yazma izni verin (chmod 755)
 
 ## File Structure
 
